@@ -17,7 +17,7 @@ import configparser
 #===============================================================================
 def run():
     config = configparser.ConfigParser()
-    config.read('module.conf', encoding='utf-8')
+    config.read('module.ini', encoding='utf-8')
     environment = os.path.abspath(config['service']['environment'])
     environment = [environment] if environment else []
     schema = os.path.abspath(config['service']['schema'])
@@ -27,7 +27,6 @@ def run():
     stage = config['service']['stage']
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     for path in paths: sys.path.append(path)
-    print(sys.path)
     paths.append('.')
     uvicorn.run(
         'service.routes:api',
