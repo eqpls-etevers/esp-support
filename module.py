@@ -32,6 +32,9 @@ host = config['default']['host']
 port = config['default']['port']
 system_access_key = config['default']['system_access_key']
 system_secret_key = config['default']['system_secret_key']
+health_check_interval = int(config['default']['health_check_interval'])
+health_check_timeout = int(config['default']['health_check_timeout'])
+health_check_retries = int(config['default']['health_check_retries'])
 
 environment = config['service']['environment']
 environment = os.path.abspath(environment) if environment else None
@@ -68,10 +71,10 @@ def deploy(nowait=False):
         environment=[],
         volumes=volumes,
         healthcheck={
-            'test': 'echo "OK"',
-            'interval': 5 * 1000000000,
-            'timeout': 2 * 1000000000,
-            'retries': 12
+            'test': 'python health.py',
+            'interval': health_check_interval * 1000000000,
+            'timeout': health_check_timeout * 1000000000,
+            'retries': health_check_retries
         }
     )
 
